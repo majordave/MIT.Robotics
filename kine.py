@@ -1,8 +1,10 @@
 from sympy import *
+import matplotlib.pyplot as plt
 
 
 # Find position matrix from parameters by forward kinematics
-def MatPos(th0, th1, th2, d1, a1, a2):
+def MatPos(angles, d1, a1, a2):
+    [th0, th1, th2] = angles
     T = Matrix([[cos(th0)*cos(th1 + th2), -sin(th1 + th2)*cos(th0),
                  -sin(th0), (a1*cos(th1) + a2*cos(th1 + th2))*cos(th0)],
                 [sin(th0)*cos(th1 + th2), -sin(th0)*sin(th1 + th2),
@@ -66,11 +68,29 @@ def equAngle(angle):
     return equ/180*pi
 
 
+# Validates position matrix derived by forward kinematics, plotting error in
+# each predicted position
+def validate(angles, pos):
+    error = Matrix()
+    for i in range(0, len(angles.col(0))):
+        mat = MatPos(angles.row(i), d1, a1, a2)
+        res = mat.col(-1).T
+        res.col_del(-1)
+        [err1, err2, err3] = pos.row(i) - res
+        error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
+    xAxis = range(0, len(error.col(0)))
+    plt.plot(xAxis, error.col(0), 'ro')
+    plt.plot(xAxis, error.col(1), 'go')
+    plt.plot(xAxis, error.col(2), 'bo')
+    plt.show()
+
+
 # Testing paramters and method calls
 a1 = 10
 a2 = 10
 d1 = 10
-test = MatPos(0, -pi/2, 0, d1, a1, a2)
+'''
+test = MatPos(Matrix([0, -pi/2, 0]), d1, a1, a2)
 pprint(test)
 th0 = Th0(test)
 th1 = Th1(test, th0)
@@ -78,3 +98,9 @@ th2 = Th2(test, th0, th1)
 print("th0 = ", th0)
 print("th1 = ", th1)
 print("th2 = ", th2)
+'''
+test = Matrix([[0, -pi/2, 0],
+               [0, -pi/2, 0]])
+pos = Matrix([[0, 0, 30],
+              [0, 0, -30]])
+validate(test, pos)
