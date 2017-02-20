@@ -1,5 +1,5 @@
-from sympy import *
-import matplotlib.pyplot as plt
+from sympy import Matrix, var, cos, sin, asin, atan, acot, pi, solve
+from matplotlib.pyplot import plot, show
 
 
 # Find position matrix from parameters by forward kinematics
@@ -35,7 +35,7 @@ def Th0(pos):
 # Find th1 angle from desired position matrix and th0 value by inverse
 # kinematics
 def Th1(pos, th0):
-    var('th1')
+    th1 = var('th1')
     [nx, ny, nz, dum] = pos.col(0)
     [px, py, pz, dum] = pos.col(-1)
     eq1 = -asin(sin(th1)*(nx*cos(th0)+ny*sin(th0))+nz*cos(th1))
@@ -57,7 +57,8 @@ def Th2(pos, th0, th1):
     [px, py, pz, dum] = pos.col(-1)
     for val in th1:
         # Unused equivalent th2 equation: th.append(-asin(nz)-val)
-        th.append(asin((cos(val)*(d1-pz)-sin(val)*(px*cos(th0)+py*sin(th0)))/a2))
+        th.append(asin((cos(val)*(d1-pz)-sin(val)*(px*cos(th0)+py*sin(th0)))
+                  / a2))
     return th
 
 
@@ -79,10 +80,10 @@ def validate(angles, pos):
         [err1, err2, err3] = pos.row(i) - res
         error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
     xAxis = range(0, len(error.col(0)))
-    plt.plot(xAxis, error.col(0), 'ro')
-    plt.plot(xAxis, error.col(1), 'go')
-    plt.plot(xAxis, error.col(2), 'bo')
-    plt.show()
+    plot(xAxis, error.col(0), 'ro')
+    plot(xAxis, error.col(1), 'go')
+    plot(xAxis, error.col(2), 'bo')
+    show()
 
 
 # Testing paramters and method calls
