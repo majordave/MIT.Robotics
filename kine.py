@@ -1,10 +1,11 @@
-from sympy import Matrix, var, cos, sin, asin, atan, acot, pi, solve
+from sympy import Matrix, var, cos, sin, asin, atan, acot, pi, solve, pprint
 from matplotlib.pyplot import plot, show
+from math import radians
+import csv
 
 
 # Find position matrix from parameters by forward kinematics
-def MatPos(angles, d1, a1, a2):
-    [th0, th1, th2] = angles
+def MatPos(th0, th1, th2, d1, a1, a2):
     T = Matrix([[cos(th0)*cos(th1 + th2), -sin(th1 + th2)*cos(th0),
                  -sin(th0), (a1*cos(th1) + a2*cos(th1 + th2))*cos(th0)],
                 [sin(th0)*cos(th1 + th2), -sin(th0)*sin(th1 + th2),
@@ -71,27 +72,37 @@ def equAngle(angle):
 
 # Validates position matrix derived by forward kinematics, plotting error in
 # each predicted position
-def validate(angles, pos):
+def validate(angles, pos, unit):
     error = Matrix()
     for i in range(0, len(angles.col(0))):
-        mat = MatPos(angles.row(i), d1, a1, a2)
-        res = mat.col(-1).T
-        res.col_del(-1)
-        [err1, err2, err3] = pos.row(i) - res
+        [th0, th1, th2] = angles.row(i)
+        if unit == 'd':
+            [th0, th1, th2] = [radians(th0), radians(th1), radians(th2)]
+        mat = MatPos(th0, th1, th2, d1, a1, a2)
+        res = mat.col(-1)
+        res.row_del(-1)
+        [px, py, pz] = pos.row(i)
+
+        if unit == 'd':
+            [px, py, pz] = [radians(px), radians(py), radians(pz)]
+
+        rads = Matrix([px, py, pz])
+        [err1, err2, err3] = rads - res
         error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
     xAxis = range(0, len(error.col(0)))
-    plot(xAxis, error.col(0), 'ro')
-    plot(xAxis, error.col(1), 'go')
-    plot(xAxis, error.col(2), 'bo')
+    plot(xAxis, error.col(0), 'r')
+    plot(xAxis, error.col(1), 'g')
+    plot(xAxis, error.col(2), 'b')
     show()
 
 
 # Testing paramters and method calls
-a1 = 10
-a2 = 10
-d1 = 10
+d1 = 37.25
+a1 = 138.44
+a2 = 35.65
+
 '''
-test = MatPos(Matrix([0, -pi/2, 0]), d1, a1, a2)
+test = MatPos(0, -pi/2, 0, d1, a1, a2)
 pprint(test)
 th0 = Th0(test)
 th1 = Th1(test, th0)
@@ -100,8 +111,8 @@ print("th0 = ", th0)
 print("th1 = ", th1)
 print("th2 = ", th2)
 '''
-test = Matrix([[0, -pi/2, 0],
-               [0, -pi/2, 0]])
-pos = Matrix([[0, 0, 30],
-              [0, 0, -30]])
-validate(test, pos)
+theta = csv.reader(open('theta.csv'), delimiter=',')
+pos = csv.reader(open('pos.csv'), delimiter=',')
+theta = Matrix(list(theta))
+pos = Matrix(list(pos))
+validate(theta, pos, 'd')
