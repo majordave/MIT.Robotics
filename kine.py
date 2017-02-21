@@ -81,13 +81,7 @@ def validate(angles, pos, unit):
         mat = MatPos(th0, th1, th2, d1, a1, a2)
         res = mat.col(-1)
         res.row_del(-1)
-        [px, py, pz] = pos.row(i)
-
-        if unit == 'd':
-            [px, py, pz] = [radians(px), radians(py), radians(pz)]
-
-        rads = Matrix([px, py, pz])
-        [err1, err2, err3] = rads - res
+        [err1, err2, err3] = pos.row(i) - res.T
         error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
     xAxis = range(0, len(error.col(0)))
     plot(xAxis, error.col(0), 'r')
