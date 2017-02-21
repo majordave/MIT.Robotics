@@ -1,5 +1,6 @@
-from kine import *
+from kine import Matrix, validate
 import csv
+
 # Testing forward kinematics validation method
 
 d1 = 37.25

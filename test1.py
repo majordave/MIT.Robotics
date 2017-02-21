@@ -1,5 +1,5 @@
-from kine import *
-from sympy import pprint
+from kine import MatPos, Th0, Th1, Th2
+from sympy import pprint, pi
 
 # Testing simple forward and inverse kinematics
 
