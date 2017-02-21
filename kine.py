@@ -1,5 +1,5 @@
 from sympy import Matrix, var, cos, sin, asin, atan, acot, pi, solve
-from matplotlib.pyplot import plot, show, legend, xlabel, ylabel
+from matplotlib.pyplot import plot, show, legend, xlabel, ylabel, figure
 from math import radians
 
 
@@ -69,30 +69,44 @@ def equAngle(angle):
     return equ/180*pi
 
 
-# Validates position matrix derived by forward kinematics, plotting error in
+# Validates position matrix derived by forward kinematics, plotting res in
 # each predicted position
 def validate(angles, pos, unit, d1, a1, a2):
+    res = Matrix()
     error = Matrix()
     for i in range(0, len(angles.col(0))):
         th0, th1, th2 = angles.row(i)
         if unit == 'd':
             th0, th1, th2 = radians(th0), radians(th1), radians(th2)
         mat = MatPos(th0, th1, th2, d1, a1, a2)
-        res = mat.col(-1)
-        res.row_del(-1)
-        err1, err2, err3 = pos.row(i) - res.T
+        resy = mat.col(-1)
+        resy.row_del(-1)
+        err1, err2, err3 = pos.row(i) - resy.T
         error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
+        res = Matrix([res, resy.T])
 
-    xAxis = range(1, len(error.col(0))+1)
+    xAxis = range(1, len(res.col(0))+1)
     avg = []
     for i in xAxis:
         ex, ey, ez = error.row(i-1)
         avg.append((ex + ey + ez)/3)
-    th0, = plot(xAxis, error.col(0), 'r', label='th0')
-    th1, = plot(xAxis, error.col(1), 'g', label='th1')
-    th2, = plot(xAxis, error.col(2), 'b', label='th2')
-    avg, = plot(xAxis, avg, 'black', label='average')
-    legend(handles=[th0, th1, th2, avg])
+
+    px0, = plot(xAxis, pos.col(0), label='px0')
+    py0, = plot(xAxis, pos.col(1), label='py0')
+    pz0, = plot(xAxis, pos.col(2), label='pz0')
+    px1, = plot(xAxis, res.col(0), label='px1')
+    py1, = plot(xAxis, res.col(1), label='py1')
+    pz1, = plot(xAxis, res.col(2), label='pz1')
+    legend(handles=[px0, py0, pz0, px1, py1, pz1])
+    xlabel("iteration")
+    ylabel("position")
+    figure()
+
+    ex, = plot(xAxis, error.col(0), label='ex')
+    ey, = plot(xAxis, error.col(1), label='ey')
+    ez, = plot(xAxis, error.col(2), label='ez')
+    avg, = plot(xAxis, avg, label='average')
+    legend(handles=[ex, ey, ez, avg])
     xlabel("iteration")
     ylabel("error")
     show()
