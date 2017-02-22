@@ -1,3 +1,4 @@
+% code MY
 function analysiscinem()
 clear all
 close all
