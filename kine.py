@@ -1,7 +1,6 @@
-from sympy import Matrix, var, cos, sin, asin, atan, acot, pi, solve, pprint
-from matplotlib.pyplot import plot, show
+from sympy import Matrix, var, cos, sin, asin, atan, acot, pi, solve
+from matplotlib.pyplot import plot, show, legend, xlabel, ylabel, figure
 from math import radians
-import csv
 
 
 # Find position matrix from parameters by forward kinematics
@@ -18,8 +17,8 @@ def MatPos(th0, th1, th2, d1, a1, a2):
 
 # Find th0 angle from desired position matrix by inverse kinematics
 def Th0(pos):
-    [nx, ox, ax, px] = pos.row(0)
-    [ny, oy, ay, py] = pos.row(1)
+    nx, ox, ax, px = pos.row(0)
+    ny, oy, ay, py = pos.row(1)
 
     if nx != 0:
         return atan(ny/nx)
@@ -35,10 +34,10 @@ def Th0(pos):
 
 # Find th1 angle from desired position matrix and th0 value by inverse
 # kinematics
-def Th1(pos, th0):
+def Th1(pos, th0, d1, a2):
     th1 = var('th1')
-    [nx, ny, nz, dum] = pos.col(0)
-    [px, py, pz, dum] = pos.col(-1)
+    nx, ny, nz, dum = pos.col(0)
+    px, py, pz, dum = pos.col(-1)
     eq1 = -asin(sin(th1)*(nx*cos(th0)+ny*sin(th0))+nz*cos(th1))
     eq2 = asin((cos(th1)*(d1-pz)-sin(th1)*(px*cos(th0)+py*sin(th0)))/a2)
     th = solve(eq1 - eq2, th1)
@@ -52,10 +51,10 @@ def Th1(pos, th0):
 
 # Find th2 angle from desired position matrix, th0 and th1 values by inverse
 # kinematics
-def Th2(pos, th0, th1):
+def Th2(pos, th0, th1, d1, a2):
     th = []
-    [nx, ny, nz, dum] = pos.col(0)
-    [px, py, pz, dum] = pos.col(-1)
+    nx, ny, nz, dum = pos.col(0)
+    px, py, pz, dum = pos.col(-1)
     for val in th1:
         # Unused equivalent th2 equation: th.append(-asin(nz)-val)
         th.append(asin((cos(val)*(d1-pz)-sin(val)*(px*cos(th0)+py*sin(th0)))
@@ -70,49 +69,44 @@ def equAngle(angle):
     return equ/180*pi
 
 
-# Validates position matrix derived by forward kinematics, plotting error in
+# Validates position matrix derived by forward kinematics, plotting res in
 # each predicted position
-def validate(angles, pos, unit):
+def validate(angles, pos, unit, d1, a1, a2):
+    res = Matrix()
     error = Matrix()
     for i in range(0, len(angles.col(0))):
-        [th0, th1, th2] = angles.row(i)
+        th0, th1, th2 = angles.row(i)
         if unit == 'd':
-            [th0, th1, th2] = [radians(th0), radians(th1), radians(th2)]
+            th0, th1, th2 = radians(th0), radians(th1), radians(th2)
         mat = MatPos(th0, th1, th2, d1, a1, a2)
-        res = mat.col(-1)
-        res.row_del(-1)
-        [px, py, pz] = pos.row(i)
-
-        if unit == 'd':
-            [px, py, pz] = [radians(px), radians(py), radians(pz)]
-
-        rads = Matrix([px, py, pz])
-        [err1, err2, err3] = rads - res
+        resy = mat.col(-1)
+        resy.row_del(-1)
+        err1, err2, err3 = pos.row(i) - resy.T
         error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
-    xAxis = range(0, len(error.col(0)))
-    plot(xAxis, error.col(0), 'r')
-    plot(xAxis, error.col(1), 'g')
-    plot(xAxis, error.col(2), 'b')
+        res = Matrix([res, resy.T])
+
+    xAxis = range(1, len(res.col(0))+1)
+    avg = []
+    for i in xAxis:
+        ex, ey, ez = error.row(i-1)
+        avg.append((ex + ey + ez)/3)
+
+    px0, = plot(xAxis, pos.col(0), label='px0')
+    py0, = plot(xAxis, pos.col(1), label='py0')
+    pz0, = plot(xAxis, pos.col(2), label='pz0')
+    px1, = plot(xAxis, res.col(0), label='px1')
+    py1, = plot(xAxis, res.col(1), label='py1')
+    pz1, = plot(xAxis, res.col(2), label='pz1')
+    legend(handles=[px0, py0, pz0, px1, py1, pz1])
+    xlabel("iteration")
+    ylabel("position")
+    figure()
+
+    ex, = plot(xAxis, error.col(0), label='ex')
+    ey, = plot(xAxis, error.col(1), label='ey')
+    ez, = plot(xAxis, error.col(2), label='ez')
+    avg, = plot(xAxis, avg, label='average')
+    legend(handles=[ex, ey, ez, avg])
+    xlabel("iteration")
+    ylabel("error")
     show()
-
-
-# Testing paramters and method calls
-d1 = 37.25
-a1 = 138.44
-a2 = 35.65
-
-'''
-test = MatPos(0, -pi/2, 0, d1, a1, a2)
-pprint(test)
-th0 = Th0(test)
-th1 = Th1(test, th0)
-th2 = Th2(test, th0, th1)
-print("th0 = ", th0)
-print("th1 = ", th1)
-print("th2 = ", th2)
-'''
-theta = csv.reader(open('theta.csv'), delimiter=',')
-pos = csv.reader(open('pos.csv'), delimiter=',')
-theta = Matrix(list(theta))
-pos = Matrix(list(pos))
-validate(theta, pos, 'd')
