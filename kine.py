@@ -41,22 +41,13 @@ def Th0(pos):
 def Th1(pos, th0, d1, a2):
     nx, ny, nz = pos[:3,0]
     px, py, pz = pos[:3,-1]
-    eq1 = 2.0*atan((-713.0*nx*tan(0.5*th0)**2 + 713.0*nx + 1426.0*ny*tan(0.5*th0) + 20.0*px*tan(0.5*th0)**2 - 20.0*px - 40.0*py*tan(0.5*th0) + sqrt(400.0*d1**2*tan(0.5*th0)**4 + 800.0*d1**2*tan(0.5*th0)**2 + 400.0*d1**2 + 28520.0*d1*nz*tan(0.5*th0)**4 + 57040.0*d1*nz*tan(0.5*th0)**2 + 28520.0*d1*nz - 800.0*d1*pz*tan(0.5*th0)**4 - 1600.0*d1*pz*tan(0.5*th0)**2 - 800.0*d1*pz + 508369.0*nx**2*tan(0.5*th0)**4 - 1016738.0*nx**2*tan(0.5*th0)**2 + 508369.0*nx**2 - 2033476.0*nx*ny*tan(0.5*th0)**3 + 2033476.0*nx*ny*tan(0.5*th0) - 28520.0*nx*px*tan(0.5*th0)**4 + 57040.0*nx*px*tan(0.5*th0)**2 - 28520.0*nx*px + 57040.0*nx*py*tan(0.5*th0)**3 - 57040.0*nx*py*tan(0.5*th0) + 2033476.0*ny**2*tan(0.5*th0)**2 + 57040.0*ny*px*tan(0.5*th0)**3 - 57040.0*ny*px*tan(0.5*th0) - 114080.0*ny*py*tan(0.5*th0)**2 + 508369.0*nz**2*tan(0.5*th0)**4 + 1016738.0*nz**2*tan(0.5*th0)**2 + 508369.0*nz**2 - 28520.0*nz*pz*tan(0.5*th0)**4 - 57040.0*nz*pz*tan(0.5*th0)**2 - 28520.0*nz*pz + 400.0*px**2*tan(0.5*th0)**4 - 800.0*px**2*tan(0.5*th0)**2 + 400.0*px**2 - 1600.0*px*py*tan(0.5*th0)**3 + 1600.0*px*py*tan(0.5*th0) + 1600.0*py**2*tan(0.5*th0)**2 + 400.0*pz**2*tan(0.5*th0)**4 + 800.0*pz**2*tan(0.5*th0)**2 + 400.0*pz**2))*cos(0.5*th0)**2/(20.0*d1 + 713.0*nz - 20.0*pz))
-    eq2 = -2.0*atan((713.0*nx*tan(0.5*th0)**2 - 713.0*nx - 1426.0*ny*tan(0.5*th0) - 20.0*px*tan(0.5*th0)**2 + 20.0*px + 40.0*py*tan(0.5*th0) + sqrt(400.0*d1**2*tan(0.5*th0)**4 + 800.0*d1**2*tan(0.5*th0)**2 + 400.0*d1**2 + 28520.0*d1*nz*tan(0.5*th0)**4 + 57040.0*d1*nz*tan(0.5*th0)**2 + 28520.0*d1*nz - 800.0*d1*pz*tan(0.5*th0)**4 - 1600.0*d1*pz*tan(0.5*th0)**2 - 800.0*d1*pz + 508369.0*nx**2*tan(0.5*th0)**4 - 1016738.0*nx**2*tan(0.5*th0)**2 + 508369.0*nx**2 - 2033476.0*nx*ny*tan(0.5*th0)**3 + 2033476.0*nx*ny*tan(0.5*th0) - 28520.0*nx*px*tan(0.5*th0)**4 + 57040.0*nx*px*tan(0.5*th0)**2 - 28520.0*nx*px + 57040.0*nx*py*tan(0.5*th0)**3 - 57040.0*nx*py*tan(0.5*th0) + 2033476.0*ny**2*tan(0.5*th0)**2 + 57040.0*ny*px*tan(0.5*th0)**3 - 57040.0*ny*px*tan(0.5*th0) - 114080.0*ny*py*tan(0.5*th0)**2 + 508369.0*nz**2*tan(0.5*th0)**4 + 1016738.0*nz**2*tan(0.5*th0)**2 + 508369.0*nz**2 - 28520.0*nz*pz*tan(0.5*th0)**4 - 57040.0*nz*pz*tan(0.5*th0)**2 - 28520.0*nz*pz + 400.0*px**2*tan(0.5*th0)**4 - 800.0*px**2*tan(0.5*th0)**2 + 400.0*px**2 - 1600.0*px*py*tan(0.5*th0)**3 + 1600.0*px*py*tan(0.5*th0) + 1600.0*py**2*tan(0.5*th0)**2 + 400.0*pz**2*tan(0.5*th0)**4 + 800.0*pz**2*tan(0.5*th0)**2 + 400.0*pz**2))*cos(0.5*th0)**2/(20.0*d1 + 713.0*nz - 20.0*pz))
-    sols = [eq1, eq2]
-
-    for sol in sols:
-        if sol > pi: 
-            sol -= 2*pi
-        if sol >= -pi/2 and sol < pi/2:
-            return sol
-
+    return 2.0*atan((-713.0*nx*tan(0.5*th0)**2 + 713.0*nx + 1426.0*ny*tan(0.5*th0) + 20.0*px*tan(0.5*th0)**2 - 20.0*px - 40.0*py*tan(0.5*th0) + sqrt(400.0*d1**2*tan(0.5*th0)**4 + 800.0*d1**2*tan(0.5*th0)**2 + 400.0*d1**2 + 28520.0*d1*nz*tan(0.5*th0)**4 + 57040.0*d1*nz*tan(0.5*th0)**2 + 28520.0*d1*nz - 800.0*d1*pz*tan(0.5*th0)**4 - 1600.0*d1*pz*tan(0.5*th0)**2 - 800.0*d1*pz + 508369.0*nx**2*tan(0.5*th0)**4 - 1016738.0*nx**2*tan(0.5*th0)**2 + 508369.0*nx**2 - 2033476.0*nx*ny*tan(0.5*th0)**3 + 2033476.0*nx*ny*tan(0.5*th0) - 28520.0*nx*px*tan(0.5*th0)**4 + 57040.0*nx*px*tan(0.5*th0)**2 - 28520.0*nx*px + 57040.0*nx*py*tan(0.5*th0)**3 - 57040.0*nx*py*tan(0.5*th0) + 2033476.0*ny**2*tan(0.5*th0)**2 + 57040.0*ny*px*tan(0.5*th0)**3 - 57040.0*ny*px*tan(0.5*th0) - 114080.0*ny*py*tan(0.5*th0)**2 + 508369.0*nz**2*tan(0.5*th0)**4 + 1016738.0*nz**2*tan(0.5*th0)**2 + 508369.0*nz**2 - 28520.0*nz*pz*tan(0.5*th0)**4 - 57040.0*nz*pz*tan(0.5*th0)**2 - 28520.0*nz*pz + 400.0*px**2*tan(0.5*th0)**4 - 800.0*px**2*tan(0.5*th0)**2 + 400.0*px**2 - 1600.0*px*py*tan(0.5*th0)**3 + 1600.0*px*py*tan(0.5*th0) + 1600.0*py**2*tan(0.5*th0)**2 + 400.0*pz**2*tan(0.5*th0)**4 + 800.0*pz**2*tan(0.5*th0)**2 + 400.0*pz**2))*cos(0.5*th0)**2/(20.0*d1 + 713.0*nz - 20.0*pz))
 
 # Find th2 angle from desired position matrix, th0 and th1 values by inverse
 # kinematics
 def Th2(pos, th1, d1, a2):
     nz = pos[2,0]
-    return -asin(nz)-th1
+    return -th1 - asin(nz)
 
 # Validates position matrix derived by forward kinematics, plotting res in
 # each predicted position
