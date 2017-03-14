@@ -1,4 +1,4 @@
-from kine import Matrix, validate
+from kine import Matrix, validate, valinv
 import csv
 # Testing forward kinematics validation method
 
@@ -10,4 +10,5 @@ theta = csv.reader(open('theta.csv'), delimiter=',')
 pos = csv.reader(open('pos.csv'), delimiter=',')
 theta = Matrix(list(theta))
 pos = Matrix(list(pos))
-validate(theta, pos, 'd', d1, a1, a2)
+mats = validate(theta, pos, 'd', d1, a1, a2)
+th0 = valinv(mats, theta, d1, a2)
