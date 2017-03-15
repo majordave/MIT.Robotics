@@ -1,14 +1,12 @@
-from kine import Matrix, validate, valinv
+from velo import validate, Matrix
 import csv
-# Testing forward kinematics validation method
 
 d1 = 37.25
 a1 = 110.32
 a2 = 35.65
 print(d1 + a1 + a2)
 theta = csv.reader(open('theta.csv'), delimiter=',')
-pos = csv.reader(open('pos.csv'), delimiter=',')
+veloc = csv.reader(open('veloc.csv'), delimiter=',')
 theta = Matrix(list(theta))
-pos = Matrix(list(pos))
-mats = validate(theta, pos, 'd', d1, a1, a2)
-ths = valinv(mats, theta, d1, a2)
+veloc = Matrix(list(veloc))
+mats = validate(theta, veloc, 'd', d1, a1, a2)
