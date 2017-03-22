@@ -53,7 +53,7 @@ def Th2(pos, th1, d1, a2):
     nz = pos[2,0]
     return -th1 - sym.asin(nz) + sym.pi/2
 
-# Validates position sym.Matrix derived by forward kinematics, plotting res in
+# Validates position Matrix derived by forward kinematics, plotting res in
 # each predicted position
 def validate(angles, pos, unit, d1, a1, a2):
     res = sym.Matrix()

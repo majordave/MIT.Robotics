@@ -31,22 +31,21 @@ def MatJac(delta0, delta1, unit, d1, a1, a2):
 def validate(angles, veloc, unit, d1, a1, a2):
     res = sym.Matrix()
     error = sym.Matrix()
-    mats = sym.Matrix()
     for i in range(1, len(angles.col(0))):
         delta1 = angles.row(i)
         delta0 = angles.row(i-1)
-        mat = MatJac(delta0, delta1, unit, d1, a1, a2)
-        mats  = sym.Matrix([mats, [mat.T]])
-        resy = mat[:3, :]
-        err1, err2, err3 = veloc.row(i-1) - resy.T
-        error = sym.Matrix([error, [abs(err1), abs(err2), abs(err3)]])
+        resy = MatJac(delta0, delta1, unit, d1, a1, a2)
+        err1, err2, err3, err4, err5, err6 = veloc.row(i-1) - resy.T
+        error = sym.Matrix([error, [abs(err1), abs(err2), abs(err3), abs(err4), abs(err5), abs(err6)]])
         res = sym.Matrix([res, resy.T])
 
     xAxis = range(1, len(res.col(0))+1)
-    avg = []
+    avgV = []
+    avgW = []
     for i in xAxis:
-        ex, ey, ez = error.row(i-1)
-        avg.append((ex + ey + ez)/3)
+        evx, evy, evz, ewx, ewy, ewz = error.row(i-1)
+        avgV.append((evx + evy + evz)/3)
+        avgW.append((ewx + ewy + ewz)/3)
 
     vx0, = plt.plot(xAxis, veloc.col(0), label='vx0')
     vy0, = plt.plot(xAxis, veloc.col(1), label='vy0')
@@ -56,16 +55,38 @@ def validate(angles, veloc, unit, d1, a1, a2):
     vz1, = plt.plot(xAxis, res.col(2), label='vz1')
     plt.legend(handles=[vx0, vy0, vz0, vx1, vy1, vz1])
     plt.xlabel("Sample")
-    plt.ylabel("Velocity [mm/s]")
+    plt.ylabel("Linear Velocity [mm/s]")
     plt.figure()
 
-    ex, = plt.plot(xAxis, error.col(0), label='ex')
-    ey, = plt.plot(xAxis, error.col(1), label='ey')
-    ez, = plt.plot(xAxis, error.col(2), label='ez')
-    avg, = plt.plot(xAxis, avg, label='average')
-    plt.legend(handles=[ex, ey, ez, avg])
+    evx, = plt.plot(xAxis, error.col(0), label='evx')
+    evy, = plt.plot(xAxis, error.col(1), label='evy')
+    evz, = plt.plot(xAxis, error.col(2), label='evz')
+    avgV, = plt.plot(xAxis, avgV, label='average')
+    plt.legend(handles=[evx, evy, evz, avgV])
+    plt.xlabel("Sample")
+    plt.ylabel("Error [mm/s]")
+    plt.ylim(0, 50)
+    plt.figure()
+
+    wx0, = plt.plot(xAxis, veloc.col(3), label='wx0')
+    wy0, = plt.plot(xAxis, veloc.col(4), label='wy0')
+    wz0, = plt.plot(xAxis, veloc.col(5), label='wz0')
+    wx1, = plt.plot(xAxis, res.col(3), label='wx1')
+    wy1, = plt.plot(xAxis, res.col(4), label='wy1')
+    wz1, = plt.plot(xAxis, res.col(5), label='wz1')
+    plt.legend(handles=[wx0, wy0, wz0, wx1, wy1, wz1])
+    plt.xlabel("Sample")
+    plt.ylabel("Angular Velocity [mm/s]")
+    plt.figure()
+    
+    ewx, = plt.plot(xAxis, error.col(3), label='ewx')
+    ewy, = plt.plot(xAxis, error.col(4), label='ewy')
+    ewz, = plt.plot(xAxis, error.col(5), label='ewz')
+    avgW, = plt.plot(xAxis, avgW, label='average')
+    plt.legend(handles=[ewx, ewy, ewz, avgW])
     plt.xlabel("Sample")
     plt.ylabel("Error [mm/s]")
     plt.ylim(0, 50)
     plt.show()
-    return mats
+    
+    return res
