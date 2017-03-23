@@ -99,7 +99,7 @@ def validate(angles, pos, unit, d1, a1, a2):
     pz1, = plot(xAxis, res.col(2), label='pz1')
     legend(handles=[px0, py0, pz0, px1, py1, pz1])
     xlabel("iteration")
-    ylabel("position[mm]")
+    ylabel("position")
     figure()
 
     ex, = plot(xAxis, error.col(0), label='ex')
@@ -108,5 +108,5 @@ def validate(angles, pos, unit, d1, a1, a2):
     avg, = plot(xAxis, avg, label='average')
     legend(handles=[ex, ey, ez, avg])
     xlabel("iteration")
-    ylabel("error [mm]")
+    ylabel("error")
     show()
