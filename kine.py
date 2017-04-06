@@ -92,7 +92,7 @@ def validate(angles, pos, unit, d1, a1, a2):
     plt.legend(handles=[ex, ey, ez, avg])
     plt.xlabel("Sample")
     plt.ylabel("Error [mm]")
-    plt.ylim(0, 50)
+    plt.ylim(0, 3)
     plt.show()
     return mats
 
