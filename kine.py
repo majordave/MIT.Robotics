@@ -20,8 +20,8 @@ def MatPos(th0, th1, th2, unit, d1, a1, a2):
 
 # Find th0 angle from desired position Matrix by inverse kinematics
 def Th0(pos):
-    nx, ox, ax, px = pos.row(0)
-    ny, oy, ay, py = pos.row(1)
+    nx, ox, ax, px = pos[0,:]
+    ny, oy, ay, py = pos[1,:]
 
     if nx != 0:
         th =  sym.atan(ny/nx)
@@ -59,36 +59,34 @@ def validate(angles, pos, unit, d1, a1, a2):
     res = sym.Matrix()
     error = sym.Matrix()
     mats = sym.Matrix()
-    for i in range(0, len(angles.col(0))):
-        th0, th1, th2 = angles.row(i)
+    for i in range(0, len(angles[:,0])):
+        th0, th1, th2 = angles[i,:]
         mat = MatPos(th0, th1, th2, unit, d1, a1, a2)
         mats  = sym.Matrix([mats, [mat]])
         resy = mat[:3, -1]
-        err1, err2, err3 = pos.row(i) - resy.T
+        err1, err2, err3 = pos[i,:] - resy.T
         error = sym.Matrix([error, [abs(err1), abs(err2), abs(err3)]])
         res = sym.Matrix([res, resy.T])
 
-    xAxis = range(1, len(res.col(0))+1)
+    xAxis = range(1, len(res[:,0])+1)
     avg = []
     for i in xAxis:
-        ex, ey, ez = error.row(i-1)
+        ex, ey, ez = error[i-1,:]
         avg.append((ex + ey + ez)/3)
 
-    px0, = plt.plot(xAxis, pos.col(0), label='px0')
-    py0, = plt.plot(xAxis, pos.col(1), label='py0')
-    pz0, = plt.plot(xAxis, pos.col(2), label='pz0')
-    px1, = plt.plot(xAxis, res.col(0), label='px1')
-    py1, = plt.plot(xAxis, res.col(1), label='py1')
-    pz1, = plt.plot(xAxis, res.col(2), label='pz1')
+    px0, = plt.plot(xAxis, pos[:,0], label=r'real $p_x$')
+    py0, = plt.plot(xAxis, pos[:,1], label=r'real $p_y$')
+    pz0, = plt.plot(xAxis, pos[:,2], label=r'real $p_z$')
+    px1, = plt.plot(xAxis, res[:,0], label=r'calculated $p_x$')
+    py1, = plt.plot(xAxis, res[:,1], label=r'calculated $p_y$')
+    pz1, = plt.plot(xAxis, res[:,2], label=r'calculated $p_z$')
     plt.legend(handles=[px0, py0, pz0, px1, py1, pz1])
     plt.xlabel("Sample")
     plt.ylabel("Position [mm]")
     plt.figure()
 
-    ex, = plt.plot(xAxis, error.col(0), label='ex')
-    ey, = plt.plot(xAxis, error.col(1), label='ey')
-    ez, = plt.plot(xAxis, error.col(2), label='ez')
-    avg, = plt.plot(xAxis, avg, label='average')
+    [ex], [ey] = plt.plot(xAxis, error[:,0], label=r'$p_x$'), plt.plot(xAxis, error[:,1], label=r'$p_y$')
+    [ez], [avg] = plt.plot(xAxis, error[:,2], label=r'$p_z$'), plt.plot(xAxis, avg, label='average')
     plt.legend(handles=[ex, ey, ez, avg])
     plt.xlabel("Sample")
     plt.ylabel("Error [mm]")
@@ -98,21 +96,42 @@ def validate(angles, pos, unit, d1, a1, a2):
 
 # Validates rotation angles derived by inverse kinematics, plotting the error in
 # each predicted angle
-def valinv(mats, angles, d1, a2):
+def valinv(mats, angles, unit, d1, a2):
     error = sym.Matrix()
-    for i in range(0, len(mats.col(0))):
-        mat, = mats.row(i)
+    res = sym.Matrix()
+    for i in range(0, len(mats[:,0])):
+        mat, = mats[i,:]
         th0 = Th0(mat)
         th1 = Th1(mat, th0, d1, a2)
         th2 = Th2(mat, th1, d1, a2)
-        r0, r1, r2 = angles.row(i)
-        errow = [abs(math.radians(r0) - th0), abs(math.radians(r1) - th1), abs(math.radians(r2) - th2)]
+        res = sym.Matrix([res, [th0, th1, th2]])
+        a0, a1, a2 = angles[i, :]
+        
+        if unit == "d":
+            a0, a1, a2 = math.radians(a0), math.radians(a1), math.radians(a2)            
+            angles[i, :] = [[a0, a1, a2]]
+        
+        errow = [abs(a0 - th0), abs(a1 - th1), abs(a2 - th2)]
         error = sym.Matrix([error, errow])
-    pt0, = plt.plot(range(1, len(error.col(0))+1), error.col(0), label='th0')
-    pt1, = plt.plot(range(1, len(error.col(0))+1), error.col(1), label='th1')
-    pt2, = plt.plot(range(1, len(error.col(0))+1), error.col(2), label='th2')
-    plt.legend(handles=[pt0, pt1, pt2])
+    
+    xAxis = range(1, len(res[:,0])+1)
+    
+    plt.figure()
+    rth0, = plt.plot(xAxis, angles[:,0], label=r'real $\theta_0$')
+    rth1, = plt.plot(xAxis, angles[:,1], label=r'real $\theta_1$')
+    rth2, = plt.plot(xAxis, angles[:,2], label=r'real $\theta_2$')
+    cth0, = plt.plot(xAxis, res[:,0], label=r'calculated $\theta_0$')
+    cth1, = plt.plot(xAxis, res[:,1], label=r'calculated $\theta_1$')
+    cth2, = plt.plot(xAxis, res[:,2], label=r'calculated $\theta_2$')
+    plt.legend(handles=[rth0, rth1, rth2, cth0, cth1, cth2])
     plt.xlabel("Sample")
-    plt.ylabel("Error [rads]")
-    plt.ylim(0, 3.1459)
+    plt.ylabel("Angle [rad]")
+    
+    plt.figure()
+    et0, = plt.plot(xAxis, error[:,0], label=r'$\theta_0$')
+    et1, = plt.plot(xAxis, error[:,1], label=r'$\theta_1$')
+    et2, = plt.plot(xAxis, error[:,2], label=r'$\theta_2$')
+    plt.legend(handles=[et0, et1, et2])
+    plt.xlabel("Sample")
+    plt.ylabel("Error [rad]")
     plt.show()
