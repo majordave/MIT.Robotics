@@ -1,8 +1,7 @@
-import velo
-import sympy as sym
 import csv
-import vinv
 import math
+import sympy as sym
+from lib import velo, vinv
 
 # Testing forward velocity validation method
 d1, a1, a2 = 46.30, 82.30, 33.5

@@ -1,6 +1,6 @@
-import kine
-import sympy as sym
 import csv
+import sympy as sym
+from lib import kine
 
 # Testing forward kinematics validation method
 d1, a1, a2 = 46.30, 82.30, 33.5
