@@ -84,5 +84,5 @@ def validate(angles, veloc, unit, d1, a1, a2):
     plt.ylabel("Error [rad/s]")
     plt.ylim(0, 50)
     plt.show()
-    
+
     return res
