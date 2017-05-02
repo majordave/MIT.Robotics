@@ -59,7 +59,7 @@ def Th2(pos, th0, th1, d1, a2):
 
 # Validates position Matrix derived by forward kinematics, plotting res in
 # each predicted position
-def validate(angles, pos, d1, a1, a2, unit='d'):
+def validate(angles, pos, d1, a1, a2, unit='d', show=False):
     rows = len(angles[:,0])
     res = zeros(rows, 3)
     error = zeros(rows, 3)
@@ -95,7 +95,8 @@ def validate(angles, pos, d1, a1, a2, unit='d'):
     plt.legend(handles=[ex, ey, ez, avg])
     plt.xlabel("Sample")
     plt.ylabel("Error [mm]")
-    plt.show()
+
+    if show: plt.show()
     return mats
 
 # Validates rotation angles derived by inverse kinematics, plotting the error in
