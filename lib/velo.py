@@ -1,42 +1,40 @@
-import sympy as sym
+from sympy import *
 import matplotlib.pyplot as plt
-import math
 
-def MatJac(delta0, delta1, unit, d1, a1, a2):
+def MatJac(delta0, delta1, d1, a1, a2, unit='d'):
     if unit == 'd':
-        delta0[1], delta0[2] = math.radians(delta0[1]), math.radians(delta0[2])
-        delta0[3], delta1[1] = math.radians(delta0[3]), math.radians(delta1[1])
-        delta1[2], delta1[3] = math.radians(delta1[2]), math.radians(delta1[3])
+        delta0[1], delta0[2] = mpmath.radians(delta0[1]), mpmath.radians(delta0[2])
+        delta0[3], delta1[1] = mpmath.radians(delta0[3]), mpmath.radians(delta1[1])
+        delta1[2], delta1[3] = mpmath.radians(delta1[2]), mpmath.radians(delta1[3])
     
-    delta0[2]-= sym.pi/2 
-    delta1[2]-= sym.pi/2
+    delta0[2]-= pi/2
+    delta1[2]-= pi/2
     th0, th1, th2 = delta1[1:]
     dtime, dth0, dth1, dth2 = delta1 - delta0
-    ths = sym.Matrix([dth0/dtime, dth1/dtime, dth2/dtime])
-    jacob = sym.Matrix([[sym.sin(th0)*(-a2*sym.cos(th1 + th2) - a1*sym.cos(th1)), 
-                     -sym.cos(th0)*(a2*sym.sin(th1 + th2) + a1*sym.sin(th1)), 
-                     -a2*sym.cos(th0)*sym.sin(th1 + th2)],
-                    [sym.cos(th0)*(a2*sym.cos(th1 + th2) + a1*sym.cos(th1)), 
-                     -sym.sin(th0)*(a2*sym.sin(th1 + th2) + a1*sym.sin(th1)), 
-                     -a2*sym.sin(th0)*sym.sin(th1 + th2)],
-                    [0, -a1*sym.cos(th1) - a2*sym.cos(th1 + th2), -a2*sym.cos(th1 + th2)],
-                    [0, -sym.sin(th0), -sym.sin(th0)],
-                    [0, sym.cos(th0), sym.cos(th0)],
+    ths = Matrix([dth0/dtime, dth1/dtime, dth2/dtime])
+    jacob = Matrix([[sin(th0)*(-a2*cos(th1 + th2) - a1*cos(th1)), -cos(th0)*(a2*sin(th1 + th2) + a1*sin(th1)),
+                     -a2*cos(th0)*sin(th1 + th2)],
+                    [cos(th0)*(a2*cos(th1 + th2) + a1*cos(th1)), -sin(th0)*(a2*sin(th1 + th2) + a1*sin(th1)),
+                     -a2*sin(th0)*sin(th1 + th2)],
+                    [0, -a1*cos(th1) - a2*cos(th1 + th2), -a2*cos(th1 + th2)],
+                    [0, -sin(th0), -sin(th0)],
+                    [0, cos(th0), cos(th0)],
                     [1, 0, 0]])
     return jacob*ths
 
-def validate(angles, veloc, unit, d1, a1, a2):
-    res = sym.Matrix()
-    error = sym.Matrix()
-    for i in range(1, len(angles[:,0])):
+def validate(angles, veloc, d1, a1, a2, unit='d'):
+    rows = len(angles[:,0])
+    res = zeros(rows-1, 6)
+    error = zeros(rows-1, 6)
+    for i in range(1, rows):
         delta1 = angles[i,:]
         delta0 = angles[i-1,:]
-        resy = MatJac(delta0, delta1, unit, d1, a1, a2)
+        resy = MatJac(delta0, delta1, d1, a1, a2, unit)
         err1, err2, err3, err4, err5, err6 = veloc[i-1,:] - resy.T
-        error = sym.Matrix([error, [abs(err1), abs(err2), abs(err3), abs(err4), abs(err5), abs(err6)]])
-        res = sym.Matrix([res, resy.T])
+        error[i-1,:] = [[abs(err1), abs(err2), abs(err3), abs(err4), abs(err5), abs(err6)]]
+        res[i-1,:] = [resy.T]
 
-    xAxis = range(1, len(res[:,0])+1)
+    xAxis = range(1, rows)
     avgV = []
     avgW = []
     for i in xAxis:
