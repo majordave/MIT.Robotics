@@ -1,14 +1,15 @@
-from lib import duino, kine
+from lib import duino, kine, routes
 import math
 
-d1, a1, a2 = 46.30, 82.30, 33.5
+d1, a1, a2 = 46.25, 82.25, 34
 ardu = duino.start()
-pos = kine.MatPos(90, 180, 0, d1, a1, a2)
-th0 = kine.Th0(pos)
-th1 = kine.Th1(pos, th0, d1, a2)
-th2 = kine.Th2(pos, th0, th1, d1, a2)
-th0 = str(int(math.degrees(th0)))
-th1 = str(int(math.degrees(th1)))
-th2 = str(int(math.degrees(th2)))
-duino.move(ardu, th0, th1, th2)
+route1 = routes.routine1
+
+for pos in route1:
+    th0 = kine.Th0(pos)
+    th1 = kine.Th1(pos, th0, d1, a2)
+    th2 = kine.Th2(pos, th0, th1, d1, a2)
+    deg = lambda x: str(int(math.degrees(x)))
+    duino.move(ardu, deg(th0), deg(th1), deg(th2))
+
 duino.stop(ardu)
