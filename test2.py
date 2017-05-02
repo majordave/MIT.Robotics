@@ -3,7 +3,7 @@ import math
 from lib import velo, vinv
 
 # Testing forward velocity validation method
-d1, a1, a2 = 46.30, 82.30, 33.5
+d1, a1, a2 = 46.25, 82.25, 34
 print(d1 + a1 + a2)
 theta = csv.reader(open('data/theta2.csv'), delimiter=',')
 veloc = csv.reader(open('data/veloc.csv'), delimiter=',')

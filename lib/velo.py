@@ -23,17 +23,18 @@ def MatJac(delta0, delta1, d1, a1, a2, unit='d'):
     return jacob*ths
 
 def validate(angles, veloc, d1, a1, a2, unit='d'):
-    res = Matrix()
-    error = Matrix()
-    for i in range(1, len(angles[:,0])):
+    rows = len(angles[:,0])
+    res = zeros(rows-1, 6)
+    error = zeros(rows-1, 6)
+    for i in range(1, rows):
         delta1 = angles[i,:]
         delta0 = angles[i-1,:]
         resy = MatJac(delta0, delta1, d1, a1, a2, unit)
         err1, err2, err3, err4, err5, err6 = veloc[i-1,:] - resy.T
-        error = Matrix([error, [abs(err1), abs(err2), abs(err3), abs(err4), abs(err5), abs(err6)]])
-        res = Matrix([res, resy.T])
+        error[i-1,:] = [[abs(err1), abs(err2), abs(err3), abs(err4), abs(err5), abs(err6)]]
+        res[i-1,:] = [resy.T]
 
-    xAxis = range(1, len(res[:,0])+1)
+    xAxis = range(1, rows)
     avgV = []
     avgW = []
     for i in xAxis:

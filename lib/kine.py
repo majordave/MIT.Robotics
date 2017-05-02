@@ -42,34 +42,38 @@ def Th0(pos):
 # Find th1 angle from desired position Matrix and th0 value by inverse
 # kinematics
 def Th1(pos, th0, d1, a2):
+    th0 *= -1
     nx, ny, nz = pos[:3,0]
     px, py, pz = pos[:3,-1]
-    #th = 2.0*atan((-713.0*nx*tan(0.5*th0)**2 + 713.0*nx + 1426.0*ny*tan(0.5*th0) + 20.0*px*tan(0.5*th0)**2 - 20.0*px - 40.0*py*tan(0.5*th0) + sqrt(400.0*d1**2*tan(0.5*th0)**4 + 800.0*d1**2*tan(0.5*th0)**2 + 400.0*d1**2 + 28520.0*d1*nz*tan(0.5*th0)**4 + 57040.0*d1*nz*tan(0.5*th0)**2 + 28520.0*d1*nz - 800.0*d1*pz*tan(0.5*th0)**4 - 1600.0*d1*pz*tan(0.5*th0)**2 - 800.0*d1*pz + 508369.0*nx**2*tan(0.5*th0)**4 - 1016738.0*nx**2*tan(0.5*th0)**2 + 508369.0*nx**2 - 2033476.0*nx*ny*tan(0.5*th0)**3 + 2033476.0*nx*ny*tan(0.5*th0) - 28520.0*nx*px*tan(0.5*th0)**4 + 57040.0*nx*px*tan(0.5*th0)**2 - 28520.0*nx*px + 57040.0*nx*py*tan(0.5*th0)**3 - 57040.0*nx*py*tan(0.5*th0) + 2033476.0*ny**2*tan(0.5*th0)**2 + 57040.0*ny*px*tan(0.5*th0)**3 - 57040.0*ny*px*tan(0.5*th0) - 114080.0*ny*py*tan(0.5*th0)**2 + 508369.0*nz**2*tan(0.5*th0)**4 + 1016738.0*nz**2*tan(0.5*th0)**2 + 508369.0*nz**2 - 28520.0*nz*pz*tan(0.5*th0)**4 - 57040.0*nz*pz*tan(0.5*th0)**2 - 28520.0*nz*pz + 400.0*px**2*tan(0.5*th0)**4 - 800.0*px**2*tan(0.5*th0)**2 + 400.0*px**2 - 1600.0*px*py*tan(0.5*th0)**3 + 1600.0*px*py*tan(0.5*th0) + 1600.0*py**2*tan(0.5*th0)**2 + 400.0*pz**2*tan(0.5*th0)**4 + 800.0*pz**2*tan(0.5*th0)**2 + 400.0*pz**2))*cos(0.5*th0)**2/(20.0*d1 + 713.0*nz - 20.0*pz))
-    th = -2.0*atan((713.0*nx*tan(0.5*th0)**2 - 713.0*nx - 1426.0*ny*tan(0.5*th0) - 20.0*px*tan(0.5*th0)**2 + 20.0*px + 40.0*py*tan(0.5*th0) + sqrt(400.0*d1**2*tan(0.5*th0)**4 + 800.0*d1**2*tan(0.5*th0)**2 + 400.0*d1**2 + 28520.0*d1*nz*tan(0.5*th0)**4 + 57040.0*d1*nz*tan(0.5*th0)**2 + 28520.0*d1*nz - 800.0*d1*pz*tan(0.5*th0)**4 - 1600.0*d1*pz*tan(0.5*th0)**2 - 800.0*d1*pz + 508369.0*nx**2*tan(0.5*th0)**4 - 1016738.0*nx**2*tan(0.5*th0)**2 + 508369.0*nx**2 - 2033476.0*nx*ny*tan(0.5*th0)**3 + 2033476.0*nx*ny*tan(0.5*th0) - 28520.0*nx*px*tan(0.5*th0)**4 + 57040.0*nx*px*tan(0.5*th0)**2 - 28520.0*nx*px + 57040.0*nx*py*tan(0.5*th0)**3 - 57040.0*nx*py*tan(0.5*th0) + 2033476.0*ny**2*tan(0.5*th0)**2 + 57040.0*ny*px*tan(0.5*th0)**3 - 57040.0*ny*px*tan(0.5*th0) - 114080.0*ny*py*tan(0.5*th0)**2 + 508369.0*nz**2*tan(0.5*th0)**4 + 1016738.0*nz**2*tan(0.5*th0)**2 + 508369.0*nz**2 - 28520.0*nz*pz*tan(0.5*th0)**4 - 57040.0*nz*pz*tan(0.5*th0)**2 - 28520.0*nz*pz + 400.0*px**2*tan(0.5*th0)**4 - 800.0*px**2*tan(0.5*th0)**2 + 400.0*px**2 - 1600.0*px*py*tan(0.5*th0)**3 + 1600.0*px*py*tan(0.5*th0) + 1600.0*py**2*tan(0.5*th0)**2 + 400.0*pz**2*tan(0.5*th0)**4 + 800.0*pz**2*tan(0.5*th0)**2 + 400.0*pz**2))*cos(0.5*th0)**2/(20.0*d1 + 713.0*nz - 20.0*pz))
+    th = -2.0*atan((-713.0*nx*tan(0.5*th0)**2 + 713.0*nx + 1426.0*ny*tan(0.5*th0) + 20.0*px*tan(0.5*th0)**2 - 20.0*px - 40.0*py*tan(0.5*th0) + sqrt(400.0*d1**2*tan(0.5*th0)**4 + 800.0*d1**2*tan(0.5*th0)**2 + 400.0*d1**2 + 28520.0*d1*nz*tan(0.5*th0)**4 + 57040.0*d1*nz*tan(0.5*th0)**2 + 28520.0*d1*nz - 800.0*d1*pz*tan(0.5*th0)**4 - 1600.0*d1*pz*tan(0.5*th0)**2 - 800.0*d1*pz + 508369.0*nx**2*tan(0.5*th0)**4 - 1016738.0*nx**2*tan(0.5*th0)**2 + 508369.0*nx**2 - 2033476.0*nx*ny*tan(0.5*th0)**3 + 2033476.0*nx*ny*tan(0.5*th0) - 28520.0*nx*px*tan(0.5*th0)**4 + 57040.0*nx*px*tan(0.5*th0)**2 - 28520.0*nx*px + 57040.0*nx*py*tan(0.5*th0)**3 - 57040.0*nx*py*tan(0.5*th0) + 2033476.0*ny**2*tan(0.5*th0)**2 + 57040.0*ny*px*tan(0.5*th0)**3 - 57040.0*ny*px*tan(0.5*th0) - 114080.0*ny*py*tan(0.5*th0)**2 + 508369.0*nz**2*tan(0.5*th0)**4 + 1016738.0*nz**2*tan(0.5*th0)**2 + 508369.0*nz**2 - 28520.0*nz*pz*tan(0.5*th0)**4 - 57040.0*nz*pz*tan(0.5*th0)**2 - 28520.0*nz*pz + 400.0*px**2*tan(0.5*th0)**4 - 800.0*px**2*tan(0.5*th0)**2 + 400.0*px**2 - 1600.0*px*py*tan(0.5*th0)**3 + 1600.0*px*py*tan(0.5*th0) + 1600.0*py**2*tan(0.5*th0)**2 + 400.0*pz**2*tan(0.5*th0)**4 + 800.0*pz**2*tan(0.5*th0)**2 + 400.0*pz**2))*cos(0.5*th0)**2/(20.0*d1 + 713.0*nz - 20.0*pz))
     return th
 
 # Find th2 angle from desired position Matrix, th0 and th1 values by inverse
 # kinematics
-def Th2(pos, th1, d1, a2):
-    nz = pos[2,0]
-    return -th1 - asin(nz)
+def Th2(pos, th0, th1, d1, a2):
+    th0 *= -1
+    th1 *= -1
+    nx, ny, nz = pos[0:3,0]
+    th = asin(sin(th1)*(nx*cos(th0)+ny*sin(th0))+nz*cos(th1))+pi/2
+    return th
 
 # Validates position Matrix derived by forward kinematics, plotting res in
 # each predicted position
 def validate(angles, pos, d1, a1, a2, unit='d'):
-    res = Matrix()
-    error = Matrix()
+    rows = len(angles[:,0])
+    res = zeros(rows, 3)
+    error = zeros(rows, 3)
     mats = Matrix()
-    for i in range(0, len(angles[:,0])):
+    for i in range(0, rows):
         th0, th1, th2 = angles[i,:]
         mat = MatPos(th0, th1, th2, d1, a1, a2, unit)
         mats  = Matrix([mats, [mat]])
         resy = mat[:3, -1]
         err1, err2, err3 = pos[i,:] - resy.T
-        error = Matrix([error, [abs(err1), abs(err2), abs(err3)]])
-        res = Matrix([res, resy.T])
+        error[i,:] = [[abs(err1), abs(err2), abs(err3)]]
+        res[i,:] = resy.T
 
-    xAxis = range(1, len(res[:,0])+1)
+    xAxis = range(1, rows+1)
     avg = []
     for i in xAxis:
         ex, ey, ez = error[i-1,:]
@@ -97,14 +101,15 @@ def validate(angles, pos, d1, a1, a2, unit='d'):
 # Validates rotation angles derived by inverse kinematics, plotting the error in
 # each predicted angle
 def valinv(mats, angles, d1, a2, unit='d'):
-    error = Matrix()
-    res = Matrix()
-    for i in range(0, len(mats[:,0])):
+    rows = len(mats[:,0])
+    error = zeros(rows, 3)
+    res = zeros(rows, 3)
+    for i in range(0, rows):
         mat, = mats[i,:]
         th0 = Th0(mat)
         th1 = Th1(mat, th0, d1, a2)
-        th2 = Th2(mat, th1, d1, a2)
-        res = Matrix([res, [th0, th1, th2]])
+        th2 = Th2(mat, th0, th1, d1, a2)
+        res[i,:] = [[th0, th1, th2]]
         a0, a1, a2 = angles[i, :]
 
         if unit == "d":
@@ -112,9 +117,9 @@ def valinv(mats, angles, d1, a2, unit='d'):
             angles[i, :] = [[a0, a1, a2]]
 
         errow = [abs(a0 - th0), abs(a1 - th1), abs(a2 - th2)]
-        error = Matrix([error, errow])
+        error[i,:] = [errow]
     
-    xAxis = range(1, len(res[:,0])+1)
+    xAxis = range(1, rows + 1)
     
     plt.figure()
     rth0, = plt.plot(xAxis, angles[:,0], label=r'real $\theta_0$')
