@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from numpy import *
 
 
-def MatJac(delta0, delta1, a1, a2, unit='d'):
+def JacMat(delta0, delta1, a1, a2, unit='d'):
     if unit == 'd':
         delta0[:, 1:] = deg2rad(delta0[:, 1:])
         delta1[:, 1:] = deg2rad(delta1[:, 1:])
@@ -42,7 +42,7 @@ def validate(angles, veloc, a1, a2, unit='d'):
 
     delta1 = angles[x_axis, :]
     delta0 = angles[0:rows - 1, :]
-    res = MatJac(delta0, delta1, a1, a2, unit)
+    res = JacMat(delta0, delta1, a1, a2, unit)
     error = abs(veloc - res)
     avgV = (error[:, 0] + error[:, 1] + error[:, 2]) / 3
     avgW = (error[:, 3] + error[:, 4] + error[:, 5]) / 3

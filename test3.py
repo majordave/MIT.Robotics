@@ -19,7 +19,7 @@ trunc = lambda x: x.round(3)
 for row in tray:
     th0, th1, th2 = row
     duino.move(ardu, str(th0), str(th1), str(th2))
-    pos = kine.MatPos(th0, th1, th2, d1=46.25, a1=82.25, a2=34)
+    pos = kine.PosMat(th0, th1, th2, d1=46.25, a1=82.25, a2=34)
     pos = pos.applyfunc(trunc)
     kine.pprint(pos)
 

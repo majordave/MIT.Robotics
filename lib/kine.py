@@ -3,7 +3,7 @@ from numpy import *
 
 
 # Find position Matrix from parameters by forward kinematics
-def MatPos(angles, d1, a1, a2, unit='d'):
+def PosMat(angles, d1, a1, a2, unit='d'):
     if unit == 'd':
         angles = deg2rad(angles)
 
@@ -17,11 +17,11 @@ def MatPos(angles, d1, a1, a2, unit='d'):
     levels = size(angles, axis=0)
 
     mats = array([[cos(th0) * cos(th1 + th2), -sin(th1 + th2) * cos(th0), -sin(th0),
-                (a1 * cos(th1) + a2 * cos(th1 + th2)) * cos(th0)],
-               [sin(th0) * cos(th1 + th2), -sin(th0) * sin(th1 + th2), cos(th0),
-                (a1 * cos(th1) + a2 * cos(th1 + th2)) * sin(th0)],
-               [-sin(th1 + th2), -cos(th1 + th2), zeros(levels), -a1 * sin(th1) - a2 * sin(th1 + th2) + d1],
-               [zeros(levels), zeros(levels), zeros(levels), ones(levels)]]).transpose(2, 0, 1)
+                   (a1 * cos(th1) + a2 * cos(th1 + th2)) * cos(th0)],
+                  [sin(th0) * cos(th1 + th2), -sin(th0) * sin(th1 + th2), cos(th0),
+                   (a1 * cos(th1) + a2 * cos(th1 + th2)) * sin(th0)],
+                  [-sin(th1 + th2), -cos(th1 + th2), zeros(levels), -a1 * sin(th1) - a2 * sin(th1 + th2) + d1],
+                  [zeros(levels), zeros(levels), zeros(levels), ones(levels)]]).transpose(2, 0, 1)
 
     res = mats[:, :3, -1]
     return mats, res
@@ -91,7 +91,7 @@ def Th2(pos, th0, th1):
 # each predicted position
 def validate(angles, pos, d1, a1, a2, unit='d', show=False):
     rows = size(angles, 0)
-    mats, res = MatPos(angles, d1, a1, a2, unit)
+    mats, res = PosMat(angles, d1, a1, a2, unit)
     error = abs(pos - res)
 
     x_axis = range(1, rows + 1)
