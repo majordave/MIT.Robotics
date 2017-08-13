@@ -1,5 +1,4 @@
 import csv
-import math
 from lib import velo, vinv
 
 # Testing forward velocity validation method
@@ -7,10 +6,9 @@ d1, a1, a2 = 46.25, 82.25, 34
 print(d1 + a1 + a2)
 theta = csv.reader(open('data/theta2.csv'), delimiter=',')
 veloc = csv.reader(open('data/veloc.csv'), delimiter=',')
-theta = velo.Matrix(list(theta))
-veloc = velo.Matrix(list(veloc))
-mats = velo.validate(theta, veloc, d1, a1, a2)
-th0, th1, th2 = theta[0,1:]
-th0, th1, th2 = math.radians(th0), math.radians(th1), math.radians(th2)
+theta = velo.array(list(theta), dtype=float)
+veloc = velo.array(list(veloc), dtype=float)
+mats = velo.validate(theta, veloc, a1, a2)
+th0, th1, th2 = velo.deg2rad(theta[0, 1:])
 IJ = vinv.JacInv(th0, th1, th2, d1, a1, a2)
-velo.pprint(IJ)
+vinv.pprint(IJ)
