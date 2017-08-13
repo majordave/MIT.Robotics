@@ -16,7 +16,7 @@ def stop(robot):
 
 # Move robot via arduino
 def move(robot, th0, th1, th2):
-    time.sleep(2)
+    time.sleep(1)
     angles = " ".join([th0, th1, th2])
     angles = bytearray(bytes(angles, "ascii"))
     robot.write(angles)
