@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 from numpy import *
 
 
+def lvldotrow(x, y):
+    return einsum('ijk,ik->ij', x, y)
+
+
 def JacMat(delta0, delta1, a1, a2, unit='d'):
     if unit == 'd':
         delta0[:, 1:] = deg2rad(delta0[:, 1:])
@@ -16,7 +20,6 @@ def JacMat(delta0, delta1, a1, a2, unit='d'):
     ths = transpose([dth0 / dtime, dth1 / dtime, dth2 / dtime])
 
     levels = len(delta1[:, 1])
-    res = zeros((levels, 6))
 
     th0, th1, th2 = delta1[:, 1], delta1[:, 2], delta1[:, 3]
 
@@ -30,8 +33,7 @@ def JacMat(delta0, delta1, a1, a2, unit='d'):
          [zeros(levels), cos(th0), cos(th0)],
          [ones(levels), zeros(levels), zeros(levels)]]).transpose(2, 0, 1)
 
-    for i in range(0, levels):
-        res[i, :] = dot(jacob[i], ths[i, :].T)
+    res = lvldotrow(jacob, ths)
 
     return res
 
